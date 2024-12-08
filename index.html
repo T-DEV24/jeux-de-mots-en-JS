@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeux de lettre manquante</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="main" id="main">
+        <div id="score-container">
+            <p>Score: <span id="score">0</span></p>
+            <p>Niveau: <span id="level">1</span></p>
+        </div>
+
+        <h1>Jeux de lettre manquante</h1>
+        <p class="temps" id="temps">Temps écoulé: <span id="span" class="span">100</span> secondes</p>
+        <div class="mot" id="mot"></div>
+        <p class="msg" id="msg"></p>
+        <div class="clavier" id="clavier"></div>
+
+        <!-- Bouton de relance du jeu -->
+        <button id="restart-button" onclick="restartGame()">Relancer le jeu</button>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>

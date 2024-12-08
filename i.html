@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de la Lettre Manquante</title>
+    <style>
+        /* Styles de base */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .word {
+            font-size: 2rem;
+            margin: 20px;
+        }
+
+        .keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            width: 240px;
+            margin: auto;
+        }
+
+        .key {
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            background-color: #ddd;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .key.correct {
+            background-color: #4CAF50;
+            animation: success 0.5s;
+        }
+
+        .key.wrong {
+            background-color: #F44336;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes success {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.1);
+            }
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: #444;
+        }
+
+        .timer {
+            color: #FF5722;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Jeu de la Lettre Manquante</h1>
+    <p class="timer">Temps restant : <span id="timer">100</span> secondes</p>
+    <p class="word" id="word">_ o r d</p>
+    <p class="message" id="message"></p>
+    <div class="keyboard" id="keyboard">
+        <!-- Boutons pour chaque lettre de l'alphabet -->
+    </div>
+
+    <script>
+        // Liste de mots complexes pour le jeu
+        const words = ["complexe", "ordinateur", "technologie", "programmation", "algorithme", "développement"];
+        let currentWord = "";
+        let hiddenLetter = "";
+        let score = 0;
+        let timeLeft = 100;
+
+        // Initialisation du clavier
+        const keyboard = document.getElementById("keyboard");
+        const alphabet = "abcdefghijklmnopqrstuvwxyz";
+        alphabet.split("").forEach(letter => {
+            const key = document.createElement("button");
+            key.classList.add("key");
+            key.textContent = letter;
+            key.onclick = () => guessLetter(letter);
+            keyboard.appendChild(key);
+        });
+
+        // Timer
+        const timerElement = document.getElementById("timer");
+        const timer = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+            if (timeLeft <= 0) endGame("Temps écoulé !");
+        }, 1000);
+
+        // Fonction pour afficher un mot avec une lettre cachée
+        function displayWord() {
+            currentWord = words[Math.floor(Math.random() * words.length)];
+            const randomIndex = Math.floor(Math.random() * currentWord.length);
+            hiddenLetter = currentWord[randomIndex];
+            const displayedWord = currentWord.replace(hiddenLetter, "_");
+            document.getElementById("word").textContent = displayedWord;
+            document.getElementById("message").textContent = "Trouvez la lettre manquante!";
+        }
+
+        // Fonction pour gérer les tentatives
+        function guessLetter(letter) {
+            const messageElement = document.getElementById("message");
+            const selectedKey = [...keyboard.children].find(key => key.textContent === letter);
+
+            if (letter === hiddenLetter) {
+                selectedKey.classList.add("correct");
+                score++;
+                messageElement.textContent = "Bonne réponse !";
+                if (score >= 10) {
+                    levelUp();
+                } else {
+                    displayWord(); // Affiche un nouveau mot
+                }
+            } else {
+                selectedKey.classList.add("wrong");
+                messageElement.textContent = "Échec!";
+            }
+            setTimeout(() => selectedKey.classList.remove("correct", "wrong"), 500);
+        }
+
+        // Passer au niveau suivant
+        function levelUp() {
+            clearInterval(timer);
+            alert("Bravo ! Niveau 1 terminé !");
+            // Niveau suivant ou fin du jeu
+        }
+
+        // Fin du jeu
+        function endGame(reason) {
+            clearInterval(timer);
+            document.getElementById("message").textContent = reason;
+            keyboard.querySelectorAll(".key").forEach(key => key.disabled = true);
+        }
+
+        // Initialisation du jeu
+        displayWord();
+    </script>
+
+</body>
+
+</html>
